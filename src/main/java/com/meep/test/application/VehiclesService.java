@@ -13,20 +13,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ScheduledService {
+public class VehiclesService {
 
-    private static final Logger log = LoggerFactory.getLogger(ScheduledService.class);
+    private static final Logger log = LoggerFactory.getLogger(VehiclesService.class);
 
     private VehiclesClient meepClient;
 
     private VehiclesRepository vehiclesRepository;
 
-    public ScheduledService(VehiclesClient meepClient, VehiclesRepository vehiclesRepository) {
+    public VehiclesService(VehiclesClient meepClient, VehiclesRepository vehiclesRepository) {
         this.meepClient = meepClient;
         this.vehiclesRepository = vehiclesRepository;
     }
 
-    public void execute() {
+    public void updateVehicles() {
         List<Vehicle> apiVehicles = meepClient.getVehicles(38.711046, -9.160096, 38.739429, -9.137115, Arrays.asList(545, 467, 473));
         List<Vehicle> dbVehicles = vehiclesRepository.getVehicles();
 

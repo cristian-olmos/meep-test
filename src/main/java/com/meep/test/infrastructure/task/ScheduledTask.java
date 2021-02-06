@@ -2,7 +2,7 @@ package com.meep.test.infrastructure.task;
 
 import java.text.SimpleDateFormat;
 
-import com.meep.test.application.ScheduledService;
+import com.meep.test.application.VehiclesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,15 +15,15 @@ public class ScheduledTask {
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-	private ScheduledService scheduledService;
+	private VehiclesService vehiclesService;
 
-	public ScheduledTask(ScheduledService scheduledService){
-		this.scheduledService = scheduledService;
+	public ScheduledTask(VehiclesService vehiclesService){
+		this.vehiclesService = vehiclesService;
 	}
 
 	@Scheduled(fixedRate = 30 * 1000)
 	public void reportCurrentTime() {
 		log.info("Executing scheduled service...");
-		scheduledService.execute();
+		vehiclesService.updateVehicles();
 	}
 }
