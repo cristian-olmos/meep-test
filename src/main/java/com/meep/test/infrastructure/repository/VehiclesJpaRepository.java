@@ -1,10 +1,13 @@
 package com.meep.test.infrastructure.repository;
 
-import com.meep.test.domain.Vehicle;
-import com.meep.test.domain.VehiclesRepository;
+import com.meep.test.domain.LocationFilter;
+import com.meep.test.domain.vehicle.Vehicle;
+import com.meep.test.domain.vehicle.VehiclesRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class VehiclesJpaRepository implements VehiclesRepository {
@@ -16,8 +19,8 @@ public class VehiclesJpaRepository implements VehiclesRepository {
     }
 
     @Override
-    public List<Vehicle> getVehicles() {
-        return jpaRepository.findAll();
+    public Set<Vehicle> getVehicles(LocationFilter locationFilter) {
+        return new HashSet<>(jpaRepository.findAll());
     }
 
     @Override
@@ -26,7 +29,13 @@ public class VehiclesJpaRepository implements VehiclesRepository {
     }
 
     @Override
-    public void remove(List<Vehicle> vehicles) {
+    public void remove(Set<Vehicle> vehicles) {
         jpaRepository.deleteAll(vehicles);
     }
+
+    @Override
+    public Set<String> getVehiclesIds() {
+        return null;
+    }
+
 }

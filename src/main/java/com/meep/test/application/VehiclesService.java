@@ -1,14 +1,14 @@
 package com.meep.test.application;
 
-import com.meep.test.domain.Vehicle;
-import com.meep.test.domain.VehiclesClient;
-import com.meep.test.domain.VehiclesRepository;
+import com.meep.test.domain.LocationFilter;
+import com.meep.test.domain.vehicle.Vehicle;
+import com.meep.test.domain.vehicle.VehiclesClient;
+import com.meep.test.domain.vehicle.VehiclesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,9 +26,10 @@ public class VehiclesService {
         this.vehiclesRepository = vehiclesRepository;
     }
 
-    public void updateVehicles() {
-        List<Vehicle> apiVehicles = meepClient.getVehicles(38.711046, -9.160096, 38.739429, -9.137115, Arrays.asList(545, 467, 473));
-        List<Vehicle> dbVehicles = vehiclesRepository.getVehicles();
+    public void updateVehicles(LocationFilter locationFilter) {
+        Set<Vehicle> apiVehicles = meepClient.getVehicles(locationFilter);
+        long l = System.currentTimeMillis();
+        Set<Vehicle> dbVehicles = vehiclesRepository.getVehicles(locationFilter);
 
         Set<Vehicle> intersection = apiVehicles.stream()
                 .distinct()
@@ -37,10 +38,12 @@ public class VehiclesService {
         log.info("intersection {}", intersection.size());
         apiVehicles.removeAll(intersection);
         log.info("Vehicle to add: {}", apiVehicles.size());
-        vehiclesRepository.save(apiVehicles);
+        vehiclesRepository.save(new ArrayList<>(apiVehicles));
         dbVehicles.removeAll(intersection);
         log.info("Vehicle to remove: {}", dbVehicles.size());
         vehiclesRepository.remove(dbVehicles);
+        long l1 = System.currentTimeMillis();
+        log.info("Time: " + (l1 - l)/1000f + " seconds");
     }
 
 }
