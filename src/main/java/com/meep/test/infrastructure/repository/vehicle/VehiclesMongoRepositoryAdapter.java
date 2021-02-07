@@ -1,37 +1,37 @@
-package com.meep.test.infrastructure.repository;
+package com.meep.test.infrastructure.repository.vehicle;
 
 import com.google.common.collect.Sets;
 import com.meep.test.domain.Filter;
-import com.meep.test.domain.Vehicle;
-import com.meep.test.domain.VehiclesRepository;
-import org.springframework.data.domain.Example;
+import com.meep.test.domain.vehicle.Vehicle;
+import com.meep.test.domain.vehicle.VehiclesRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Set;
 
 @Repository
-public class VehiclesJpaRepository implements VehiclesRepository {
+public class VehiclesMongoRepositoryAdapter implements VehiclesRepository {
 
-    private JpaWrapperRepository jpaRepository;
+    private VehiclesMongoRepository jpaRepository;
 
-    public VehiclesJpaRepository(JpaWrapperRepository jpaRepository) {
+    public VehiclesMongoRepositoryAdapter(VehiclesMongoRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
     @Override
     public Set<Vehicle> getVehicles(Filter filter) {
         return Sets.newConcurrentHashSet(jpaRepository.findByFilter(
+                filter.getZone(),
                 filter.getLowerLat(),
                 filter.getLeftLon(),
                 filter.getUpperLat(),
-                filter.getRightLon()
+                filter.getRightLon(),
+                filter.getCompanies()
         ));
 
     }
 
     @Override
-    public void save(List<Vehicle> vehicles) {
+    public void save(Set<Vehicle> vehicles) {
         jpaRepository.saveAll(vehicles);
     }
 

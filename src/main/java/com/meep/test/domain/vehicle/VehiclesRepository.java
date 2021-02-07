@@ -1,13 +1,14 @@
-package com.meep.test.domain;
+package com.meep.test.domain.vehicle;
 
-import java.util.List;
+import com.meep.test.domain.Filter;
+
 import java.util.Set;
 
 public interface VehiclesRepository {
 
     Set<Vehicle> getVehicles(Filter filter);
 
-    void save(List<Vehicle> vehicles);
+    void save(Set<Vehicle> vehicles);
 
     void remove(Set<Vehicle> vehicles);
 }

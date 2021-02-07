@@ -1,24 +1,26 @@
-package com.meep.test.domain;
+package com.meep.test.infrastructure.rest;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
-public class Vehicle {
+@Document(collection = "vehicles")
+public class VehicleDto {
     @Id private String id;
     private String name;
-    private String x;
-    private String y;
+    private Double x;
+    private Double y;
     private String licencePlate;
     private String range;
-    private String batteryLevel;
-    private String helmets;
+    private Integer batteryLevel;
+    private Integer helmets;
     private String model;
     private String resourceImageId;
     private String vehicleGenEcooltra;
     private String realTimeData;
     private String resourceType;
-    private String companyZoneId;
+    private Integer companyZoneId;
 
     public String getId() {
         return id;
@@ -28,11 +30,11 @@ public class Vehicle {
         return name;
     }
 
-    public String getX() {
+    public Double getX() {
         return x;
     }
 
-    public String getY() {
+    public Double getY() {
         return y;
     }
 
@@ -44,11 +46,11 @@ public class Vehicle {
         return range;
     }
 
-    public String getBatteryLevel() {
+    public Integer getBatteryLevel() {
         return batteryLevel;
     }
 
-    public String getHelmets() {
+    public Integer getHelmets() {
         return helmets;
     }
 
@@ -72,7 +74,7 @@ public class Vehicle {
         return resourceType;
     }
 
-    public String getCompanyZoneId() {
+    public Integer getCompanyZoneId() {
         return companyZoneId;
     }
 
@@ -80,7 +82,7 @@ public class Vehicle {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vehicle vehicle = (Vehicle) o;
+        VehicleDto vehicle = (VehicleDto) o;
         return Objects.equals(id, vehicle.id) && Objects.equals(name, vehicle.name) && Objects.equals(companyZoneId, vehicle.companyZoneId);
     }
 
