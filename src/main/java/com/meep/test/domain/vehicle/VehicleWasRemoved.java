@@ -1,8 +1,6 @@
 package com.meep.test.domain.vehicle;
 
-import com.meep.test.domain.DomainEvent;
-
-import java.time.Instant;
+import com.meep.test.shared.domain.DomainEvent;
 
 public class VehicleWasRemoved extends DomainEvent {
     private final String vehicleId;

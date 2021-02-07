@@ -1,4 +1,4 @@
-package com.meep.test.domain;
+package com.meep.test.shared.domain;
 
 public interface EventRepository {
     void save(DomainEvent domainEvent);

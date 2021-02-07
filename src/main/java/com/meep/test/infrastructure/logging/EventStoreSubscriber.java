@@ -1,19 +1,17 @@
 package com.meep.test.infrastructure.logging;
 
-import com.meep.test.domain.DomainEvent;
-import com.meep.test.domain.DomainEventPublisher;
-import com.meep.test.domain.EventRepository;
-import com.meep.test.domain.Subscriber;
+import com.meep.test.shared.domain.DomainEvent;
+import com.meep.test.shared.domain.EventRepository;
+import com.meep.test.shared.domain.Subscriber;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LoggingEventsSubscriber implements Subscriber {
+public class EventStoreSubscriber implements Subscriber {
 
     private EventRepository repository;
 
-    public LoggingEventsSubscriber(EventRepository repository) {
+    public EventStoreSubscriber(EventRepository repository) {
         this.repository = repository;
-        DomainEventPublisher.getInstance().subscribe(this);
     }
 
     @Override
