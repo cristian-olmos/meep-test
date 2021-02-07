@@ -1,4 +1,4 @@
-package com.meep.test.infrastructure.logging;
+package com.meep.test.infrastructure.subscriber;
 
 import com.meep.test.shared.domain.DomainEvent;
 import com.meep.test.shared.domain.EventRepository;

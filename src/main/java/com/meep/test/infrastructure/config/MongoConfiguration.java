@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
         "com.meep.test.infrastructure.repository",
         "com.meep.test.shared.infrastructure.repository",
 })
-public class JpaConfiguration {
+public class MongoConfiguration {
 }
