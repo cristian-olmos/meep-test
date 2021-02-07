@@ -21,7 +21,7 @@ public class ScheduledTask {
 		this.vehiclesService = vehiclesService;
 	}
 
-	@Scheduled(fixedRate = 30 * 1000)
+	@Scheduled(fixedRate = 30 * 100)
 	public void reportCurrentTime() {
 		log.info("Executing scheduled service...");
 		vehiclesService.updateVehicles();

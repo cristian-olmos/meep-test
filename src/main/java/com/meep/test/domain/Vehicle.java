@@ -1,14 +1,11 @@
 package com.meep.test.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+
 import java.util.Objects;
 
-@Entity
 public class Vehicle {
-
-    @Id
-    private String id;
+    @Id private String id;
     private String name;
     private String x;
     private String y;

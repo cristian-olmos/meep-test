@@ -1,5 +1,6 @@
 package com.meep.test.application;
 
+import com.meep.test.domain.Filter;
 import com.meep.test.domain.Vehicle;
 import com.meep.test.domain.VehiclesClient;
 import com.meep.test.domain.VehiclesRepository;
@@ -28,7 +29,7 @@ public class VehiclesService {
 
     public void updateVehicles() {
         List<Vehicle> apiVehicles = meepClient.getVehicles(38.711046, -9.160096, 38.739429, -9.137115, Arrays.asList(545, 467, 473));
-        List<Vehicle> dbVehicles = vehiclesRepository.getVehicles();
+        Set<Vehicle> dbVehicles = vehiclesRepository.getVehicles(new Filter(38.711046, -9.160096, 38.739429, -9.137115, Arrays.asList(545, 467, 473)));
 
         Set<Vehicle> intersection = apiVehicles.stream()
                 .distinct()
