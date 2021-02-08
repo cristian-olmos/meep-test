@@ -29,7 +29,7 @@ public class ScheduledTask {
         this.filterRepository = filterRepository;
     }
 
-    @Scheduled(fixedRate = 30 * 100)
+    @Scheduled(fixedRate = 30 * 1000)
     public void detectVehiclesChange() {
         log.info("Executing scheduled vehicles changes service...");
 
