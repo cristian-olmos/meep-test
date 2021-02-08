@@ -1,14 +1,17 @@
 package com.meep.test.application;
 
-import com.meep.test.domain.Vehicle;
-import com.meep.test.domain.VehiclesClient;
-import com.meep.test.domain.VehiclesRepository;
+import com.meep.test.domain.Filter;
+import com.meep.test.domain.vehicle.Vehicle;
+import com.meep.test.domain.vehicle.VehicleWasAdded;
+import com.meep.test.domain.vehicle.VehicleWasRemoved;
+import com.meep.test.domain.vehicle.VehiclesRepository;
+import com.meep.test.domain.vehicle.VehiclesVendorRepository;
+import com.meep.test.shared.domain.DomainEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,30 +20,49 @@ public class VehiclesService {
 
     private static final Logger log = LoggerFactory.getLogger(VehiclesService.class);
 
-    private VehiclesClient meepClient;
+    private VehiclesVendorRepository vehiclesVendorRepository;
 
     private VehiclesRepository vehiclesRepository;
 
-    public VehiclesService(VehiclesClient meepClient, VehiclesRepository vehiclesRepository) {
-        this.meepClient = meepClient;
+    private DomainEventPublisher domainEventPublisher;
+
+    public VehiclesService(VehiclesVendorRepository vehiclesVendorRepository, VehiclesRepository vehiclesRepository, DomainEventPublisher domainEventPublisher) {
+        this.vehiclesVendorRepository = vehiclesVendorRepository;
         this.vehiclesRepository = vehiclesRepository;
+        this.domainEventPublisher = domainEventPublisher;
     }
 
-    public void updateVehicles() {
-        List<Vehicle> apiVehicles = meepClient.getVehicles(38.711046, -9.160096, 38.739429, -9.137115, Arrays.asList(545, 467, 473));
-        List<Vehicle> dbVehicles = vehiclesRepository.getVehicles();
+    public void updateVehicles(Filter filter) {
+        log.info("Checking vehicles changes for filter {}", filter);
+        Set<Vehicle> apiVehicles = vehiclesVendorRepository.getVehicles(filter);
+        Set<Vehicle> dbVehicles = vehiclesRepository.getVehicles(filter);
 
         Set<Vehicle> intersection = apiVehicles.stream()
                 .distinct()
                 .filter(dbVehicles::contains)
                 .collect(Collectors.toSet());
-        log.info("intersection {}", intersection.size());
         apiVehicles.removeAll(intersection);
-        log.info("Vehicle to add: {}", apiVehicles.size());
-        vehiclesRepository.save(apiVehicles);
+        saveNewVehicles(apiVehicles);
         dbVehicles.removeAll(intersection);
-        log.info("Vehicle to remove: {}", dbVehicles.size());
-        vehiclesRepository.remove(dbVehicles);
+        removeOldVehicles(dbVehicles);
+    }
+
+    private void removeOldVehicles(Set<Vehicle> dbVehicles) {
+        if (!CollectionUtils.isEmpty(dbVehicles)) {
+            vehiclesRepository.remove(dbVehicles);
+            for (Vehicle dbVehicle : dbVehicles) {
+                domainEventPublisher.publish(new VehicleWasRemoved(dbVehicle.getId(), dbVehicle.getName()));
+            }
+        }
+    }
+
+    private void saveNewVehicles(Set<Vehicle> apiVehicles) {
+        if (!CollectionUtils.isEmpty(apiVehicles)) {
+            vehiclesRepository.save(apiVehicles);
+            for (Vehicle vehicle : apiVehicles) {
+                domainEventPublisher.publish(new VehicleWasAdded(vehicle.getId(), vehicle.getName()));
+            }
+        }
     }
 
 }
